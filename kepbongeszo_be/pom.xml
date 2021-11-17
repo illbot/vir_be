@@ -90,7 +90,7 @@
                     <schemas>
                         <schema>public</schema>
                     </schemas>
-                    <url>jdbc:postgresql://localhost:5433/docker</url>
+                    <url>jdbc:postgresql://localhost:5432/docker</url>
                 </configuration>
                 <!--configuration>
                     <user>docker</user>

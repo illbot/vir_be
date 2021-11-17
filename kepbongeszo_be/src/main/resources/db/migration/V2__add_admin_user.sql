@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Role es user tablak osszekotese
-CREATE TABLE user_roles (
+CREATE TABLE IF NOT EXISTS user_roles (
 	user_id int8 NOT NULL,
 	role_id int4 NOT NULL,
 	CONSTRAINT user_roles_pkey PRIMARY KEY (user_id, role_id)
