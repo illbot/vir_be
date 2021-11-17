@@ -59,6 +59,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!--dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
@@ -85,8 +90,16 @@
                     <schemas>
                         <schema>public</schema>
                     </schemas>
-                    <url>jdbc:postgresql://localhost:5432/docker</url>
+                    <url>jdbc:postgresql://localhost:5433/docker</url>
                 </configuration>
+                <!--configuration>
+                    <user>docker</user>
+                    <password>docker</password>
+                    <schemas>
+                        <schema>public</schema>
+                    </schemas>
+                    <url>jdbc:postgresql://localhost:5432/docker</url>
+                </configuration-->
             </plugin>
         </plugins>
     </build>
