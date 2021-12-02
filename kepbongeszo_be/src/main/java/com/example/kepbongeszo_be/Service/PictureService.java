@@ -1,6 +1,8 @@
 package com.example.kepbongeszo_be.Service;
 
 import com.example.kepbongeszo_be.Controller.Request.UploadRequest;
+import com.example.kepbongeszo_be.Controller.Response.AdminPictureResponse;
+import com.example.kepbongeszo_be.Controller.Response.PictureResponse;
 import com.example.kepbongeszo_be.Model.ERole;
 import com.example.kepbongeszo_be.Model.Picture;
 import com.example.kepbongeszo_be.Model.Role;
@@ -43,10 +45,6 @@ public class PictureService {
             });
         });
 
-        //String encodedDataUrl = Base64.getEncoder().encodeToString(request.getDataURL().getBytes());
-
-        //pic.setDataURL(dataUrlByte);
-
         pic.setDescription(request.getDescription());
         pic.setName(request.getName());
         pic.setType(request.getType());
@@ -58,7 +56,7 @@ public class PictureService {
         return pictureRepository.exists(Example.of(pic));
     }
 
-    public List<Picture> loadAll(User user){
+    public List<Picture> loadAllByRole(User user){
         List<Picture> result = new ArrayList<>();
         Set<Picture> picSet = new HashSet<>();
         user.getRoles().forEach(role -> {
@@ -68,6 +66,23 @@ public class PictureService {
         });
         picSet.forEach(picture -> {
             result.add(picture);
+        });
+        return result;
+    }
+
+    public List<AdminPictureResponse> getAll(){
+        List<AdminPictureResponse> result = new ArrayList<>();
+        pictureRepository.findAll().forEach(picture -> {
+            AdminPictureResponse pr = new AdminPictureResponse();
+
+            pr.setDisplayName(picture.getDisplayName());
+            pr.setId(picture.getId());
+            pr.setUploader(picture.getUploader().getUsername());
+            pr.setName(picture.getName());
+            pr.setDescription(picture.getDescription());
+            pr.setAvailability(picture.getVisibilityList());
+
+            result.add(pr);
         });
         return result;
     }

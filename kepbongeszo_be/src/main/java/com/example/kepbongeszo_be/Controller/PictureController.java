@@ -1,10 +1,7 @@
 package com.example.kepbongeszo_be.Controller;
 
 import com.example.kepbongeszo_be.Controller.Request.UploadRequest;
-import com.example.kepbongeszo_be.Controller.Response.HelloWorld;
-import com.example.kepbongeszo_be.Controller.Response.MessageResponse;
-import com.example.kepbongeszo_be.Controller.Response.PictureResponse;
-import com.example.kepbongeszo_be.Controller.Response.ResponseMessage;
+import com.example.kepbongeszo_be.Controller.Response.*;
 import com.example.kepbongeszo_be.Model.Picture;
 import com.example.kepbongeszo_be.Model.User;
 import com.example.kepbongeszo_be.Repository.UserRepository;
@@ -15,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,7 +69,7 @@ public class PictureController {
         }
 
         List<PictureResponse> fileInfos = new ArrayList<>();
-        pictureService.loadAll(user).forEach(picture -> {
+        pictureService.loadAllByRole(user).forEach(picture -> {
             PictureResponse result = new PictureResponse();
 
             result.setId(picture.getId());
@@ -85,6 +83,14 @@ public class PictureController {
         });
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+
+
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AdminPictureResponse>> getAll(){
+        List<AdminPictureResponse> responseList = pictureService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
     @GetMapping("/files/{filename:.+}")
