@@ -1,5 +1,7 @@
 package com.example.kepbongeszo_be.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +23,10 @@ public class User {
     private String email;
 
     private String password;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "uploader")
+    private Set<Picture> pictures;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
@@ -75,5 +81,25 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(Set<Picture> pictures) {
+        this.pictures = pictures;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", pictures=" + pictures +
+                ", roles=" + roles +
+                '}';
     }
 }

@@ -1,15 +1,11 @@
-package com.example.kepbongeszo_be.Controller.Request;
+package com.example.kepbongeszo_be.Controller.Response;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Set;
-
-public class UploadRequest {
-    private Long uploader;
-    private Set<String> visibility_list;
+public class PictureResponse {
+    private Long id;
     private String description;
     private String type;
     private String name;
+    private String uploader;
     private String displayName;
 
     public String getDisplayName() {
@@ -20,23 +16,12 @@ public class UploadRequest {
         this.displayName = displayName;
     }
 
-    public UploadRequest() {
+    public Long getId() {
+        return id;
     }
 
-    public Long getUploader() {
-        return uploader;
-    }
-
-    public void setUploader(Long uploader) {
-        this.uploader = uploader;
-    }
-
-    public Set<String> getVisibility_list() {
-        return visibility_list;
-    }
-
-    public void setVisibility_list(Set<String> visibility_list) {
-        this.visibility_list = visibility_list;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -46,7 +31,6 @@ public class UploadRequest {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public String getType() {
         return type;
@@ -62,5 +46,13 @@ public class UploadRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUploader() {
+        return uploader;
+    }
+
+    public void setUploader(String uploader) {
+        this.uploader = uploader;
     }
 }
