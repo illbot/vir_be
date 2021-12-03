@@ -114,6 +114,7 @@ public class PictureController {
         return pictureService.changeVisibility(cvr);
     }
 
+    //TEST COMMENT FOR JENKINS
     @DeleteMapping("/delete/{pictureId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseMessage> delete(@PathVariable Long pictureId){
