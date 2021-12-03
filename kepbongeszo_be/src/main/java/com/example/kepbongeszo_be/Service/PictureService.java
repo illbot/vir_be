@@ -1,8 +1,10 @@
 package com.example.kepbongeszo_be.Service;
 
+import com.example.kepbongeszo_be.Controller.Request.ChangeVisibilityRequest;
 import com.example.kepbongeszo_be.Controller.Request.UploadRequest;
 import com.example.kepbongeszo_be.Controller.Response.AdminPictureResponse;
 import com.example.kepbongeszo_be.Controller.Response.PictureResponse;
+import com.example.kepbongeszo_be.Controller.Response.ResponseMessage;
 import com.example.kepbongeszo_be.Model.ERole;
 import com.example.kepbongeszo_be.Model.Picture;
 import com.example.kepbongeszo_be.Model.Role;
@@ -12,6 +14,8 @@ import com.example.kepbongeszo_be.Repository.RoleRepository;
 import com.example.kepbongeszo_be.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -29,6 +33,9 @@ public class PictureService {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    PictureStorageService pictureStorageService;
 
     public boolean addPicture(UploadRequest request){
         User uploader = userRepository.findById(request.getUploader()).orElse(null);
@@ -81,9 +88,40 @@ public class PictureService {
             pr.setName(picture.getName());
             pr.setDescription(picture.getDescription());
             pr.setAvailability(picture.getVisibilityList());
+            pr.setType(picture.getType());
 
             result.add(pr);
         });
         return result;
+    }
+
+    public ResponseEntity<ResponseMessage> changeVisibility(ChangeVisibilityRequest cvr) {
+        Picture pic = pictureRepository.findById(cvr.getPictureId()).orElse(null);
+        Role role = roleRepository.findByName(ERole.ROLE_USER).orElse(null);
+        Set<Role> pvl = pic.getVisibilityList();
+
+        if (cvr.isUserVisibility()) {
+            pvl.add(role);
+        } else {
+            pvl.remove(role);
+        }
+
+        pic.setVisibilityList(pvl);
+
+        return pictureRepository.save(pic) != null ?
+                ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Change successfull!")) :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Couldn't save changes!"));
+    }
+
+    public ResponseEntity<ResponseMessage> delete(Long pictureId) {
+        Picture pic = pictureRepository.findById(pictureId).orElse(null);
+        String filename = pic.getName();
+
+        if(pictureStorageService.delete(filename)){
+            pictureRepository.delete(pic);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Delete successfull!"));
+        } else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage("Couldn't delete picture!"));
+        }
     }
 }

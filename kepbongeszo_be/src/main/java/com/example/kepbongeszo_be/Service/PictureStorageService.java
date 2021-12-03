@@ -17,4 +17,6 @@ public interface PictureStorageService {
     public void deleteAll();
 
     public Stream<Path> loadAll();
+
+    public boolean delete(String filename);
 }

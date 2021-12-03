@@ -1,5 +1,6 @@
 package com.example.kepbongeszo_be.Controller;
 
+import com.example.kepbongeszo_be.Controller.Request.ChangeVisibilityRequest;
 import com.example.kepbongeszo_be.Controller.Request.UploadRequest;
 import com.example.kepbongeszo_be.Controller.Response.*;
 import com.example.kepbongeszo_be.Model.Picture;
@@ -85,14 +86,6 @@ public class PictureController {
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
 
-
-    @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AdminPictureResponse>> getAll(){
-        List<AdminPictureResponse> responseList = pictureService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(responseList);
-    }
-
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
@@ -104,5 +97,27 @@ public class PictureController {
     @RequestMapping("/get")
     public HelloWorld home(){
         return new HelloWorld();
+    }
+
+
+    @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<AdminPictureResponse>> getAll(){
+        List<AdminPictureResponse> responseList = pictureService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
+    }
+
+    @PostMapping("/changeVisibility")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseMessage> changeVisibility(@RequestBody ChangeVisibilityRequest cvr){
+        System.out.println(cvr);
+        return pictureService.changeVisibility(cvr);
+    }
+
+    @DeleteMapping("/delete/{pictureId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseMessage> delete(@PathVariable Long pictureId){
+        System.out.println(pictureId);
+        return pictureService.delete(pictureId);
     }
 }

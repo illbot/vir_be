@@ -65,4 +65,15 @@ public class PictureStorageServiceImpl implements  PictureStorageService{
             throw new RuntimeException("Could not load the files!");
         }
     }
+
+    @Override
+    public boolean delete(String filename) {
+        try {
+            Path file = root.resolve(filename);
+            Files.delete(file);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 }
